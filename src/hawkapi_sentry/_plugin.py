@@ -9,7 +9,7 @@ from typing import Any
 import sentry_sdk
 from hawkapi.plugins import Plugin
 
-from hawkapi_sentry._context import redact_headers, request_context
+from hawkapi_sentry._context import request_context
 
 logger = logging.getLogger("hawkapi_sentry")
 
@@ -53,7 +53,12 @@ class SentryPlugin(Plugin):
     # ------------------------------------------------------------------
 
     def on_startup(self) -> None:
-        """Initialise the Sentry SDK. No-op when dsn is empty or None."""
+        """Initialise the Sentry SDK. No-op when dsn is empty or None.
+
+        ``send_default_pii`` is forced off by default so the SDK does not
+        attach IP addresses, cookies, or other PII to every event. Pass
+        ``before_send`` to opt back in selectively.
+        """
         if not self._dsn:
             logger.info("hawkapi_sentry: no DSN provided — Sentry disabled (no-op mode)")
             return
@@ -64,6 +69,7 @@ class SentryPlugin(Plugin):
             "traces_sample_rate": self._traces_sample_rate,
             "profiles_sample_rate": self._profiles_sample_rate,
         }
+        init_kwargs.setdefault("send_default_pii", False)
         if self._release is not None:
             init_kwargs["release"] = self._release
         if self._before_send is not None:
@@ -121,7 +127,3 @@ class SentryPlugin(Plugin):
                 if isinstance(user, dict):
                     return user  # type: ignore[return-value]
         return None
-
-    def _redact_headers_helper(self, headers: Any) -> dict[str, str]:
-        """Delegate to module-level helper."""
-        return redact_headers(headers)

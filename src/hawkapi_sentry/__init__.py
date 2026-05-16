@@ -5,7 +5,7 @@ from __future__ import annotations
 from hawkapi_sentry._middleware import SentryMiddleware
 from hawkapi_sentry._plugin import SentryPlugin
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "SentryMiddleware",

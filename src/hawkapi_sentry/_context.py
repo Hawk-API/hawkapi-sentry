@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
+from urllib.parse import parse_qsl, quote, urlencode
 
 _REDACT_HEADER_NAMES = frozenset(
     [
@@ -14,7 +15,20 @@ _REDACT_HEADER_NAMES = frozenset(
     ]
 )
 
+_SENSITIVE_QUERY_PARAMS: frozenset[str] = frozenset(
+    {
+        "token",
+        "key",
+        "api_key",
+        "password",
+        "secret",
+        "access_token",
+        "refresh_token",
+    }
+)
+
 _FILTERED = "[Filtered]"
+_REDACTED_VALUE = "***"
 
 
 def redact_headers(headers: Any) -> dict[str, str]:
@@ -33,6 +47,28 @@ def redact_headers(headers: Any) -> dict[str, str]:
     return result
 
 
+def redact_query_string(qs: str, sensitive: frozenset[str] | None = None) -> str:
+    """Return *qs* with values for sensitive keys replaced by ``***``.
+
+    The ``***`` sentinel is emitted verbatim — `urlencode` would otherwise
+    percent-encode the asterisks and obscure the intent of the redaction
+    in Sentry's UI.
+    """
+    if not qs:
+        return qs
+    targets = sensitive if sensitive is not None else _SENSITIVE_QUERY_PARAMS
+    targets = frozenset(t.lower() for t in targets)
+    pairs = parse_qsl(qs, keep_blank_values=True)
+    parts: list[str] = []
+    for k, v in pairs:
+        key = urlencode([(k, "")]).rstrip("=")
+        if k.lower() in targets:
+            parts.append(f"{key}={_REDACTED_VALUE}")
+        else:
+            parts.append(f"{key}={quote(v, safe='')}")
+    return "&".join(parts)
+
+
 def status_class(status_code: int) -> str:
     """Map an HTTP status code to an OTel/Sentry transaction status string."""
     if status_code < 400:
@@ -42,11 +78,20 @@ def status_class(status_code: int) -> str:
     return "internal_error"
 
 
-def request_context(request: Any) -> dict[str, Any]:
-    """Build a Sentry request context dict from a HawkAPI Request."""
+def request_context(
+    request: Any,
+    *,
+    sensitive_query_params: frozenset[str] | None = None,
+) -> dict[str, Any]:
+    """Build a Sentry request context dict from a HawkAPI Request.
+
+    Sensitive values in the ``query_string`` field are masked with ``***`` so
+    they never reach Sentry's UI (CWE-200).
+    """
     url: str = request.url
     qs_raw: Any = request.query_string
     qs: str = qs_raw.decode("latin-1") if hasattr(qs_raw, "decode") else str(qs_raw)
+    qs = redact_query_string(qs, sensitive_query_params)
     return {
         "method": request.method,
         "url": url,

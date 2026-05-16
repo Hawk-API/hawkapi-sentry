@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-05-16
+
+### Security
+
+- Fix distributed-trace continuation to use the modern
+  `sentry_sdk.continue_trace` API instead of the broken
+  `transaction.continuing_trace` call.
+- Mask sensitive query parameters (`token`, `key`, `api_key`, `password`,
+  `secret`, `access_token`, `refresh_token`) in the Sentry request context
+  (CWE-200). `request_context` now takes an optional
+  `sensitive_query_params` argument.
+- `send_default_pii` is explicitly defaulted to `False` in
+  `sentry_sdk.init`.
+
+### Changed
+
+- After routing matches, the transaction is renamed to the route template
+  (e.g. `GET /users/{id}`) with `source="route"` so transactions group
+  correctly in Sentry.
+- Removed the unused private `_redact_headers_helper` method.
+
 ## [0.1.1] - 2026-04-19
 
 ### Changed
