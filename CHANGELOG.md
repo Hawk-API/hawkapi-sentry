@@ -59,5 +59,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI workflow: lint (`ruff`), typecheck (`pyright`), test matrix (Python 3.12 + 3.13).
 - Release workflow: build with `uv build`, publish via PyPI trusted publishing.
 
-[Unreleased]: https://github.com/ashimov/hawkapi-sentry/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/ashimov/hawkapi-sentry/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Hawk-API/hawkapi-sentry/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Hawk-API/hawkapi-sentry/releases/tag/v0.1.0

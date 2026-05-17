@@ -31,9 +31,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ashimov/hawkapi-sentry"
-Repository = "https://github.com/ashimov/hawkapi-sentry"
-Issues = "https://github.com/ashimov/hawkapi-sentry/issues"
+Homepage = "https://github.com/Hawk-API/hawkapi-sentry"
+Repository = "https://github.com/Hawk-API/hawkapi-sentry"
+Issues = "https://github.com/Hawk-API/hawkapi-sentry/issues"
 
 [project.optional-dependencies]
 dev = [

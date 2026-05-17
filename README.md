@@ -3,10 +3,10 @@
 [![PyPI](https://img.shields.io/pypi/v/hawkapi-sentry)](https://pypi.org/project/hawkapi-sentry/)
 [![Python](https://img.shields.io/pypi/pyversions/hawkapi-sentry)](https://pypi.org/project/hawkapi-sentry/)
 [![License](https://img.shields.io/pypi/l/hawkapi-sentry)](LICENSE)
-[![CI](https://github.com/ashimov/hawkapi-sentry/actions/workflows/ci.yml/badge.svg)](https://github.com/ashimov/hawkapi-sentry/actions/workflows/ci.yml)
+[![CI](https://github.com/Hawk-API/hawkapi-sentry/actions/workflows/ci.yml/badge.svg)](https://github.com/Hawk-API/hawkapi-sentry/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/pypi/dm/hawkapi-sentry)](https://pypi.org/project/hawkapi-sentry/)
 
-Sentry integration for [HawkAPI](https://github.com/ashimov/HawkAPI) — a plugin that initialises the Sentry SDK on startup and captures unhandled exceptions, plus a middleware that creates a performance transaction per request.
+Sentry integration for [HawkAPI](https://github.com/Hawk-API/HawkAPI) — a plugin that initialises the Sentry SDK on startup and captures unhandled exceptions, plus a middleware that creates a performance transaction per request.
 
 ---
 
@@ -70,7 +70,7 @@ The main difference: HawkAPI plugins own the SDK lifecycle, so you never call `s
 
 ```bash
 # Clone and install in editable mode with dev extras
-git clone https://github.com/ashimov/hawkapi-sentry.git
+git clone https://github.com/Hawk-API/hawkapi-sentry.git
 cd hawkapi-sentry
 uv sync --extra dev
 
