@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-06-10
+
+### Security
+
+- The request `url` attached to events now has its query string redacted
+  with the same sensitive-parameter rules already applied to
+  `query_string` (CWE-200).
+
 ## [0.2.0] - 2026-05-16
 
 ### Security
@@ -59,5 +67,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI workflow: lint (`ruff`), typecheck (`pyright`), test matrix (Python 3.12 + 3.13).
 - Release workflow: build with `uv build`, publish via PyPI trusted publishing.
 
-[Unreleased]: https://github.com/Hawk-API/hawkapi-sentry/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Hawk-API/hawkapi-sentry/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Hawk-API/hawkapi-sentry/compare/v0.2.0...v0.2.1
 [0.1.0]: https://github.com/Hawk-API/hawkapi-sentry/releases/tag/v0.1.0

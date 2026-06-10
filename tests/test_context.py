@@ -118,3 +118,17 @@ def test_request_context_query_string() -> None:
     req = _FakeRequest("GET", "http://localhost/search?q=hello", {}, b"q=hello")
     ctx = _request_context(req)
     assert ctx["query_string"] == "q=hello"
+
+
+def test_request_context_redacts_url_query() -> None:
+    """The url field must redact sensitive query params, not just query_string."""
+    req = _FakeRequest(
+        "GET",
+        "http://localhost/cb?token=s3cret&q=hello",
+        {},
+        b"token=s3cret&q=hello",
+    )
+    ctx = _request_context(req)
+    assert "s3cret" not in ctx["url"]
+    assert ctx["url"] == "http://localhost/cb?token=***&q=hello"
+    assert ctx["query_string"] == "token=***&q=hello"

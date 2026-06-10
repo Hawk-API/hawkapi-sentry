@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
-from urllib.parse import parse_qsl, quote, urlencode
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 _REDACT_HEADER_NAMES = frozenset(
     [
@@ -92,6 +92,15 @@ def request_context(
     qs_raw: Any = request.query_string
     qs: str = qs_raw.decode("latin-1") if hasattr(qs_raw, "decode") else str(qs_raw)
     qs = redact_query_string(qs, sensitive_query_params)
+    # The full URL carries its own query (e.g. ?token=...); redact it too so the
+    # url field doesn't leak what query_string already masks (CWE-200).
+    url_parts = urlsplit(url)
+    if url_parts.query:
+        url = urlunsplit(
+            url_parts._replace(
+                query=redact_query_string(url_parts.query, sensitive_query_params)
+            )
+        )
     return {
         "method": request.method,
         "url": url,
