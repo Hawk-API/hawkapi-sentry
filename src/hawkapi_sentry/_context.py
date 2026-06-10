@@ -97,9 +97,7 @@ def request_context(
     url_parts = urlsplit(url)
     if url_parts.query:
         url = urlunsplit(
-            url_parts._replace(
-                query=redact_query_string(url_parts.query, sensitive_query_params)
-            )
+            url_parts._replace(query=redact_query_string(url_parts.query, sensitive_query_params))
         )
     return {
         "method": request.method,
